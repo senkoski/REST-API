@@ -1,33 +1,47 @@
-const express = require('express');
-const app = express();
-const PORT = 3000;
+import express from "express";
 
-// Middleware para parsear JSON
-app.use(express.json());
+const orango = express();
 
-// Rota GET /usuarios
-app.get('/usuarios', (req, res) => {
-  console.log('Rota acessada: /usuarios');
-  res.send('Rota /usuarios acessada');
-});
+orango.use(express.json());
 
-// Rota GET /usuario com parâmetro id
-app.get('/usuario/:id', (req, res) => {
-  const { id } = req.params;
-  console.log(`Rota acessada: /usuario com ID: ${id}`);
-  res.send(`Rota /usuario acessada com ID: ${id}`);
-});
+var ultimoId = 1;
+var usuarios = [];
 
-// Rota POST /usuario/criar
-app.post('/usuario/criar', (req, res) => {
-  console.log('Corpo da requisição recebido:', req.body);
-  res.json({
-    message: 'Usuário criado com sucesso',
-    data: req.body
-  });
-});
+orango.get("/usuarios", (req, res) => {
+    res.send("Usuarios: ")
 
-// Iniciar o servidor
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+    res.status(200).json(usuarios)
+})
+
+orango.get("/rota/:id", (req, res) => {
+    console.log("Você acessou a rota: ", req.params)
+})
+
+orango.post("/usuarios/cadastrar", (req, res) => {
+
+    const { nome, email } = req.body;
+
+    if(!nome || !email) {
+        res.status(400).json( message = "Não tem nome ou email")
+        return;
+    }
+
+    const usuario = {
+        id: ultimoId++,
+        nome,
+        email
+    }
+    usuarios.push(usuario)
+
+    console.log("Usuario cadastrado: ")
+    console.log(usuarios)
+
+    
+    console.log(usuarios)
+    res.status(200).json(req.body)
+})
+
+const PORT = 3002;
+orango.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
